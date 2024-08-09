@@ -1,4 +1,4 @@
-# greedcampusui
+# Greed Campus UI
 
 ## Project setup
 ```
