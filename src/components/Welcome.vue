@@ -1,16 +1,44 @@
 <template>
+
   <div class="welcome-container">
     <h1>Welcome to GREED CAMPUS</h1>
     <div class="button-container">
       <router-link to="/play" class="btn">Play</router-link>
-      <router-link to="/register" class="btn">Register</router-link>
+      <button @click="openRegisterForm" class="btn">Register</button>
+      <!-- <router-link to="/register" class="btn">Register</router-link> -->
     </div>
+
+    <Register 
+      :visible="showRegisterForm"
+      @close="closeRegisterForm"
+    />
   </div>
+
 </template>
 
 <script>
+
+import Register from './Register.vue'
+
 export default {
   name: 'Welcome',
+  components: {
+    Register
+  },
+
+  data() {
+    return {
+      showRegisterForm: false,
+    };
+  },
+  methods: {
+    openRegisterForm() {
+      this.showRegisterForm = true;
+    },
+    closeRegisterForm() {
+      this.showRegisterForm = false;
+    },
+  },
 };
 </script>
 
@@ -22,8 +50,8 @@ export default {
   align-items: center;
   height: 100vh;
   text-align: center;
-  background-color: #282c34;
-  color: white;
+  background-color: white;
+  color: #282c34;
 }
 
 h1 {
@@ -51,5 +79,6 @@ h1 {
   background-color: #61dafb;
   color: #20232a;
 }
+
 </style>
 

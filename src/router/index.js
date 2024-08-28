@@ -12,11 +12,6 @@ const routes = [
     name: 'Play',
     component: () => import('../components/Play.vue'), // Lazy loading the component
   },
-  {
-    path: '/register',
-    name: 'Register',
-    component: () => import('../components/Register.vue'), // Lazy loading the component
-  },
 ];
 
 const router = createRouter({

@@ -34,7 +34,7 @@
     },
     "rules": {
       "vue/multi-word-component-names": ["error", {
-        "ignores": ["Welcome"]
+        "ignores": ["Welcome", "Register"]
       }]
     }
   },
