@@ -3,40 +3,54 @@
   <div class="welcome-container">
     <h1>Welcome to GREED CAMPUS</h1>
     <div class="button-container">
-      <router-link to="/play" class="btn">Play</router-link>
+      <button @click="openPlayForm" class="btn">Play</button>
       <button @click="openRegisterForm" class="btn">Register</button>
-      <!-- <router-link to="/register" class="btn">Register</router-link> -->
     </div>
 
-    <Register 
+    <PlayModal 
+      :visible="showPlayForm"
+      @close="closePlayForm"
+    />
+
+    <RegisterModal 
       :visible="showRegisterForm"
       @close="closeRegisterForm"
     />
+
   </div>
 
 </template>
 
 <script>
 
-import Register from './Register.vue'
+import RegisterModal from './RegisterModal.vue'
+import PlayModal from './PlayModal.vue'
 
 export default {
-  name: 'Welcome',
+  name: 'WelcomePage',
   components: {
-    Register
+    RegisterModal,
+    PlayModal
   },
 
   data() {
     return {
       showRegisterForm: false,
+      showPlayForm: false,
     };
   },
   methods: {
     openRegisterForm() {
       this.showRegisterForm = true;
     },
+    openPlayForm() {
+      this.showPlayForm = true;
+    },
     closeRegisterForm() {
       this.showRegisterForm = false;
+    },
+    closePlayForm() {
+      this.showPlayForm = false;
     },
   },
 };

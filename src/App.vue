@@ -1,14 +1,15 @@
 <template>
-  <Welcome/>
+  <router-view />
+  <WelcomePage />
 </template>
 
 <script>
-import Welcome from './components/Welcome.vue'
+import WelcomePage from './components/WelcomePage.vue'
 
 export default {
   name: 'App',
   components: {
-    Welcome
+    WelcomePage,
   }
 }
 </script>
