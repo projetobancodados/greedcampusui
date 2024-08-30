@@ -1,16 +1,32 @@
+import { useAuthStore } from '../stores/auth';
 import { createRouter, createWebHistory } from 'vue-router';
-import Welcome from '../components/Welcome.vue';
 
 const routes = [
   {
     path: '/',
     name: 'Welcome',
-    component: Welcome,
+    component: () => import('../components/WelcomePage.vue'),
+    beforeEnter: (to, from, next) => {
+      const authStore = useAuthStore();
+      if (authStore.isLoggedIn()) {
+        next('/home');
+      } else {
+        next();
+      }
+    },
   },
   {
-    path: '/play',
-    name: 'Play',
-    component: () => import('../components/Play.vue'), // Lazy loading the component
+    path: '/home',
+    name: 'Home',
+    component: () => import('../components/HomePage.vue'),
+    beforeEnter: (to, from, next) => {
+      const authStore = useAuthStore();
+      if (!authStore.isLoggedIn()) {
+        next('/');
+      } else {
+        next();
+      }
+    },
   },
 ];
 
