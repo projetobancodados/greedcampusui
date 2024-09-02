@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import { useAuthStore } from '../stores/auth';
-import router from '../router';
+import { useAuthStore } from '../../stores/auth';
+import router from '../../router';
 export default {
   props: {
     visible: {

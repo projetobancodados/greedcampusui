@@ -5,7 +5,7 @@ const routes = [
   {
     path: '/',
     name: 'Welcome',
-    component: () => import('../components/WelcomePage.vue'),
+    component: () => import('../components/welcome/WelcomePage.vue'),
     beforeEnter: (to, from, next) => {
       const authStore = useAuthStore();
       if (authStore.isLoggedIn()) {
@@ -18,7 +18,7 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: () => import('../components/HomePage.vue'),
+    component: () => import('../components/home/HomePage.vue'),
     beforeEnter: (to, from, next) => {
       const authStore = useAuthStore();
       if (!authStore.isLoggedIn()) {
