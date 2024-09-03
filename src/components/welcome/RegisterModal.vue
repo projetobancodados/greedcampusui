@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { registerUserAPI } from '../../api';
 export default {
   props: {
     visible: {
@@ -45,19 +46,7 @@ export default {
     },
     async registerUser() {
       try {
-        // Example of making an API call to register the user
-        const response = await fetch(`${process.env.VUE_APP_API_URL}/hunter/register`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(this.formData),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to register');
-        }
-
+        const response = await registerUserAPI(this.formData);
         const data = await response.json();
         alert(data.msg);
         this.close();

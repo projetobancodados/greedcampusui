@@ -3,7 +3,7 @@
     <div class="session-options">
 
       <div class="avatar" @click="toggleDropdown">
-        <img src="avatar.png" alt="Avatar" class="avatar-icon" />
+        <img :src="placeholderAvatar" alt="Avatar" class="avatar-icon" />
       </div>
 
       <div v-if="isDropdownVisible" class="dropdown-menu">
@@ -14,6 +14,8 @@
       </div>
 
     </div>
+
+    <div>Welcome, {{ hunterData.Username }}</div>
     
     <div class="jenny-count">
       <button>Jennys</button>
@@ -22,13 +24,18 @@
   </div>
 
   <ProfileModal 
-    :visible="showProfile"
+    v-if="showProfile"
+    :data="hunterData"
     @close="closeProfile"
+    @update="handleDataUpdate"
   />
 
 </template>
 
 <script>
+import { ref, computed } from 'vue';
+import { logUserAPI } from '../../api';
+import { binaryStrToArrayBuffer } from '../../utils';
 import { useAuthStore } from '../../stores/auth';
 import ProfileModal from './profile/ProfileModal.vue';
 
@@ -37,44 +44,82 @@ export default {
   components: {
     ProfileModal,
   },
-  data() {
-    return {
-      isDropdownVisible: false,
-      showProfile: false,
-    };
+  props: {
+    data: {
+      type: Object,
+      required: true,
+    },
   },
-  setup() {
+  setup(props) {
+    
+    // console.log(props.data);
+    const isDropdownVisible = ref(false);
+    const showProfile = ref(false);
+    const hunterData = ref(props.data);
     const authStore = useAuthStore();
+
+    const placeholderAvatar = computed(() => {
+      // console.log(hunterData.value.Avatar);
+      if (hunterData.value.Avatar) {
+        const buffer = binaryStrToArrayBuffer(hunterData.value.Avatar);
+        const mimeType = 'application/octet-stream';
+        const result = new Blob([buffer], {type: mimeType});
+        // const result = new Blob([hunterData.value.Avatar], {type: 'application/octet-stream'});
+        // console.log(result);
+        return URL.createObjectURL(result);
+      }
+      return require('@/assets/placeholder-avatar.png');
+    });
+
+    const openProfile = () => {
+      if (hunterData.value) {
+        showProfile.value = true;
+      }
+    };
+
+    const closeProfile = () => {
+      showProfile.value = false;
+    };
+
+    const handleDataUpdate = async (updatedData) => {
+      if (updatedData) {
+        authStore.logout();
+        try {
+          const response = await logUserAPI(updatedData);
+          if(!response.ok) {
+            throw new Error('Failed to login');
+          }
+          const data = await response.json();
+          authStore.login(data.access_token);
+          // console.log('updatedData: ' + updatedData);
+          hunterData.value = updatedData;
+        } catch (error) {
+          alert('Error: ' + error.message);
+        }
+      }
+    };
 
     function logout() {
       authStore.logout();
       window.location.href = '/'; // Redirect to the welcome page
     }
 
-    return { logout };
+    return {
+      isDropdownVisible,
+      showProfile,
+      hunterData,
+      placeholderAvatar,
+      openProfile,
+      closeProfile,
+      handleDataUpdate,
+      logout 
+    };
   },
   methods: {
     toggleDropdown() {
       this.isDropdownVisible = !this.isDropdownVisible;
     },
-    openProfile() {
-      this.showProfile = true;
-    },
-    closeProfile() {
-      this.showProfile = false;
-    },
-    // handleClickOutside(event) {
-    //   if (!this.$el.contains(event.target)) {
-    //     this.isDropdownVisible = false;
-    //   }
-    // },
   },
-  // mounted() {
-  //   document.addEventListener('click', this.handleClickOutside);
-  // },
-  // beforeUnmount() {
-  //   document.removeEventListener('click', this.handleClickOutside);
-  // },
 };
 </script>
 
@@ -85,6 +130,7 @@ export default {
   align-items: center;
   width: 100%;
   padding: 10px;
+  background-color: #ccc;
 }
 
 .session-options {
