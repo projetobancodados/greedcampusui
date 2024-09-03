@@ -11,6 +11,14 @@ export async function registerUserAPI(formData) {
   return response;
 }
 
+// Delete user
+export async function deleteUserAPI(hunter_id) {
+  const response = await fetch(`${process.env.VUE_APP_API_URL}/hunter/delete/${hunter_id}`, {
+    method: 'DELETE'
+  });
+  return response;
+}
+
 // Log user
 export async function logUserAPI(formData) {
   const response = await fetch(`${process.env.VUE_APP_API_URL}/auth/login`, {

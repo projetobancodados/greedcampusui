@@ -27,6 +27,7 @@
           </div>
           <button type="submit" class="btn submit-btn">Update</button>
         </form>
+        <button @click="handleDeleteAccount" class="btn delete-account-btn">Delete Account</button>
       </div>
     </div>
   </div>
@@ -34,7 +35,9 @@
 
 <script>
 import { ref, watch } from 'vue';
-import { arrayBufferToBinaryStr } from '../../../utils';
+import { arrayBufferToBinaryStr } from '@/utils';
+import { deleteUserAPI } from '@/api';
+import { useAuthStore } from '@/stores/auth';
 export default {
   props: {
     data: {
@@ -47,6 +50,7 @@ export default {
     const formData = ref(props.data);
     const avatarFile = ref(null);
     const previewUrl = ref(null);
+    const authStore = useAuthStore();
 
     watch(() => props.data, (newData) => {
       Object.assign(formData, newData);
@@ -63,6 +67,24 @@ export default {
           // console.log(formData.value);
         };
         reader.readAsArrayBuffer(file);
+      }
+    };
+
+    const handleDeleteAccount = async () => {
+      const hunter_id = formData.value.Hunter_Id;
+      if (hunter_id) {
+        // console.log('deleting user with id ', hunter_id);
+        try {
+          const response = await deleteUserAPI(hunter_id);
+          const data = await response.json();
+          if (data.msg) {
+            alert(data.msg + ' Sad to see you go!');
+          }
+          authStore.logout();
+          window.location.reload();
+        } catch (error) {
+          console.log(error);
+        } 
       }
     };
 
@@ -108,6 +130,7 @@ export default {
       formData,
       previewUrl,
       handleSubmit,
+      handleDeleteAccount,
       handleFileChange,
     };
   },
@@ -176,6 +199,21 @@ label {
 }
 
 .submit-btn:hover {
+  background-color: #20232a;
+  color: #61dafb;
+}
+
+.delete-account-btn {
+  background-color: #bf2121;
+  border: none;
+  padding: 10px 20px;
+  color: #20232a;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-account-btn:hover {
   background-color: #20232a;
   color: #61dafb;
 }
