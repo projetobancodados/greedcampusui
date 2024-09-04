@@ -18,7 +18,7 @@
     <div>Welcome, {{ hunterData.Username }}</div>
     
     <div class="jenny-count">
-      <button>Jennys</button>
+      <button @click="openJennyPuzzle" class="btn btn-jenny">Jennys</button>
     </div>
 
   </div>
@@ -30,6 +30,12 @@
     @update="handleDataUpdate"
   />
 
+  <JennyPuzzleModal
+    v-if="showJennyPuzzle"
+    :data="hunterData"
+    @close="closeJennyPuzzle"
+  />
+
 </template>
 
 <script>
@@ -37,12 +43,15 @@ import { ref, computed } from 'vue';
 import { logUserAPI } from '../../api';
 import { binaryStrToArrayBuffer } from '../../utils';
 import { useAuthStore } from '../../stores/auth';
+
 import ProfileModal from './profile/ProfileModal.vue';
+import JennyPuzzleModal from './jenny-puzzle/JennyPuzzleModal.vue';
 
 export default {
   name: 'HeaderVue',
   components: {
     ProfileModal,
+    JennyPuzzleModal,
   },
   props: {
     data: {
@@ -55,6 +64,8 @@ export default {
     // console.log(props.data);
     const isDropdownVisible = ref(false);
     const showProfile = ref(false);
+    const showJennyPuzzle = ref(false);
+
     const hunterData = ref(props.data);
     const authStore = useAuthStore();
 
@@ -79,6 +90,14 @@ export default {
 
     const closeProfile = () => {
       showProfile.value = false;
+    };
+
+    const openJennyPuzzle = () => {
+      showJennyPuzzle.value = true;
+    };
+
+    const closeJennyPuzzle = () => {
+      showJennyPuzzle.value = false;
     };
 
     const handleDataUpdate = async (updatedData) => {
@@ -107,10 +126,13 @@ export default {
     return {
       isDropdownVisible,
       showProfile,
+      showJennyPuzzle,
       hunterData,
       placeholderAvatar,
       openProfile,
       closeProfile,
+      openJennyPuzzle,
+      closeJennyPuzzle,
       handleDataUpdate,
       logout 
     };
@@ -142,8 +164,8 @@ export default {
 }
 
 .avatar-icon {
-  width: 40px; /* Adjust size */
-  height: 40px; /* Adjust size */
+  width: 60px; /* Adjust size */
+  height: 60px; /* Adjust size */
   border-radius: 50%; /* Makes it circular */
 }
 
@@ -171,5 +193,18 @@ export default {
 
 .dropdown-menu li:hover {
   background-color: #f0f0f0; /* Hover effect */
+}
+
+.btn-jenny {
+  background-color: #43d943;
+  border-radius: 10px;
+  border-width: 0.5px;
+  padding: 5px 10px;
+  font-size: 20px;
+}
+
+.btn-jenny:hover {
+  background-color: #e36664;
+  cursor: pointer;
 }
 </style>

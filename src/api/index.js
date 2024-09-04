@@ -11,6 +11,12 @@ export async function registerUserAPI(formData) {
   return response;
 }
 
+// Get user by id
+export async function getUserByIdAPI(hunter_id) {
+  const response = await fetch(`${process.env.VUE_APP_API_URL}/hunter/${hunter_id}`);
+  return response;
+}
+
 // Delete user
 export async function deleteUserAPI(hunter_id) {
   const response = await fetch(`${process.env.VUE_APP_API_URL}/hunter/delete/${hunter_id}`, {
