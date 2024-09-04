@@ -4,12 +4,12 @@
       <span class="close" @click="close">&times;</span>
       <form @submit.prevent="logUser">
         <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" v-model="formData.username" required />
+          <label for="Username">Username</label>
+          <input type="text" v-model="formData.Username" required />
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" v-model="formData.password" required />
+          <label for="Password">Password</label>
+          <input type="password" v-model="formData.Password" required />
         </div>
         <button type="submit" class="btn submit-btn">Play!</button>
       </form>
@@ -19,6 +19,7 @@
 
 <script>
 import { useAuthStore } from '../../stores/auth';
+import { logUserAPI } from '../../api';
 import router from '../../router';
 export default {
   props: {
@@ -30,8 +31,8 @@ export default {
   data() {
     return {
       formData: {
-        username: '',
-        password: '',
+        Username: '',
+        Password: '',
       },
     };
   },
@@ -41,14 +42,8 @@ export default {
     },
     async logUser() {
       try {
-        const response = await fetch(`${process.env.VUE_APP_API_URL}/auth/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(this.formData),
-        });
 
+        const response = await logUserAPI(this.formData);
         if(!response.ok) {
           throw new Error('Failed to login');
         }
