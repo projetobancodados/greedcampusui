@@ -9,6 +9,7 @@ export function arrayBufferToBinaryStr (buffer) {
 }
 
 export function binaryStrToArrayBuffer (base64) {
+  // console.log(base64);
   const binaryString = atob(base64);
   const len = binaryString.length;
   const buffer = new ArrayBuffer(len);
@@ -19,4 +20,10 @@ export function binaryStrToArrayBuffer (base64) {
   }
 
   return buffer;
+}
+
+export function convertBufferToImageURL (buffer) {
+  const mimeType = 'application/octet-stream';
+  const result = new Blob([buffer], {type: mimeType});
+  return URL.createObjectURL(result);
 }

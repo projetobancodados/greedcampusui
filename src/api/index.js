@@ -35,6 +35,7 @@ export async function deleteUserAPI(hunter_id) {
 
 // Log user
 export async function logUserAPI(formData) {
+  // console.log(formData);
   const response = await fetch(`${process.env.VUE_APP_API_URL}/auth/login`, {
     method: 'POST',
     headers: {
@@ -42,6 +43,12 @@ export async function logUserAPI(formData) {
     },
     body: JSON.stringify(formData),
   });
+  return response;
+}
+
+// Get all users
+export async function getAllUsers() {
+  const response = await fetch(`${process.env.VUE_APP_API_URL}/hunter/all`);
   return response;
 }
 

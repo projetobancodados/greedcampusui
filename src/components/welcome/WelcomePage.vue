@@ -64,7 +64,7 @@ export default {
   align-items: center;
   height: 100vh;
   text-align: center;
-  background-color: white;
+  background-color: #daf2e0;
   color: #282c34;
 }
 

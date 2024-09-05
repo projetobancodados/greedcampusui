@@ -121,7 +121,7 @@ export default {
 
     const handleSubmit = async () => {
       try {
-        console.log(formData.value);
+        
         let formDataToSend = {
           Username: formData.value.Username,
           Email: formData.value.Email,
@@ -145,7 +145,7 @@ export default {
         }
 
         const updatedData = await response.json();
-        // console.log(updatedData);
+        
         alert('Data updated successfully!');
         emit('update', updatedData);
         emit('close');
@@ -221,9 +221,10 @@ label {
 .submit-btn {
   background-color: #61dafb;
   border: none;
-  padding: 10px 20px;
-  color: #20232a;
   border-radius: 5px;
+  padding: 10px 20px;
+  margin: 5px 0px 5px 0px;
+  color: #20232a;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -236,9 +237,10 @@ label {
 .delete-account-btn {
   background-color: #bf2121;
   border: none;
-  padding: 10px 20px;
-  color: #20232a;
   border-radius: 5px;
+  padding: 10px 20px;
+  margin: 5px 0px 5px 0px;
+  color: #fff;
   cursor: pointer;
   transition: background-color 0.3s;
 }
