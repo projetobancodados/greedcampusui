@@ -11,6 +11,14 @@ export async function registerUserAPI(formData) {
   return response;
 }
 
+// Get user by username
+export async function getUserByUsernameAPI() {
+  const response = await fetch(
+    `${process.env.VUE_APP_API_URL}/hunter/username/${localStorage.getItem('access_token')}`
+  );
+  return response;
+}
+
 // Get user by id
 export async function getUserByIdAPI(hunter_id) {
   const response = await fetch(`${process.env.VUE_APP_API_URL}/hunter/${hunter_id}`);
@@ -34,5 +42,17 @@ export async function logUserAPI(formData) {
     },
     body: JSON.stringify(formData),
   });
+  return response;
+}
+
+// Get locations
+export async function getAllLocations() {
+  const response = await fetch(`${process.env.VUE_APP_API_URL}/locations`);
+  return response;
+}
+
+// Get types question
+export async function getAllTypesQuestion() {
+  const response = await fetch(`${process.env.VUE_APP_API_URL}/typesquestion`);
   return response;
 }

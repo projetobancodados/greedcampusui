@@ -26,6 +26,8 @@
   <ProfileModal 
     v-if="showProfile"
     :data="hunterData"
+    :locations="locations"
+    :typesQuestion="typesQuestion"
     @close="closeProfile"
     @update="handleDataUpdate"
   />
@@ -58,15 +60,22 @@ export default {
       type: Object,
       required: true,
     },
+    gameElements: {
+      type: Object,
+      required: true,
+    }
   },
   setup(props) {
     
-    // console.log(props.data);
+    // console.log(props.gameElements);
     const isDropdownVisible = ref(false);
     const showProfile = ref(false);
     const showJennyPuzzle = ref(false);
 
     const hunterData = ref(props.data);
+    const locations = ref(props.gameElements['locations']);
+    const typesQuestion = ref(props.gameElements['typesQuestion']);
+
     const authStore = useAuthStore();
 
     const placeholderAvatar = computed(() => {
@@ -128,6 +137,8 @@ export default {
       showProfile,
       showJennyPuzzle,
       hunterData,
+      locations,
+      typesQuestion,
       placeholderAvatar,
       openProfile,
       closeProfile,
