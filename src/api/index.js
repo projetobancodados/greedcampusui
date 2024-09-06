@@ -63,3 +63,15 @@ export async function getAllTypesQuestion() {
   const response = await fetch(`${process.env.VUE_APP_API_URL}/typesquestion`);
   return response;
 }
+
+// Get all cards
+export async function getAllGameCards () {
+  const response = await fetch(`${process.env.VUE_APP_API_URL}/cards`);
+  return response;
+}
+
+// Get cards by hunter id
+export async function getAllHunterCards(hunter_id) {
+  const response = await fetch(`${process.env.VUE_APP_API_URL}/cards/book/${hunter_id}`)
+  return response;
+}

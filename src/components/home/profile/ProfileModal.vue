@@ -129,6 +129,7 @@ export default {
           Avatar: formData.value.Avatar,
           Location: formData.value.Location,
           Type_Question: formData.value.Type_Question,
+          Type_Hunter: formData.value.Type_Hunter,
         };
 
         // console.log(formDataToSend, JSON.stringify(formDataToSend));
