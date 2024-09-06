@@ -25,6 +25,26 @@
             <label for="password" >Password</label>
             <input type="password" id="password" v-model="formData.Password" required />
           </div>
+          <div class="form-group">
+            <label for="location">Update your location</label>
+            <select v-model="formData.Location">
+              <option v-for="(location) in locationSelect"
+              :key="location.Location_Id" :value="location.Location_Id"
+              >
+                {{ location.Description }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="type-question">Update your theme</label>
+            <select v-model="formData.Type_Question">
+              <option v-for="(typeQuestion) in typesQuestionSelect"
+              :key="typeQuestion.Type_Question_Id" :value="typeQuestion.Type_Question_Id"
+              >
+                {{ typeQuestion.Description }}
+              </option>
+            </select>
+          </div>
           <button type="submit" class="btn submit-btn">Update</button>
         </form>
         <button @click="handleDeleteAccount" class="btn delete-account-btn">Delete Account</button>
@@ -44,10 +64,21 @@ export default {
       type: Object,
       required: true,
     },
+    locations: {
+      type: Array,
+      required: true,
+    },
+    typesQuestion: {
+      type: Array,
+      required: true,
+    }
   },
   setup(props, { emit }) {
 
     const formData = ref(props.data);
+    const locationSelect = ref(props.locations);
+    const typesQuestionSelect = ref(props.typesQuestion);
+
     const avatarFile = ref(null);
     const previewUrl = ref(null);
     const authStore = useAuthStore();
@@ -90,18 +121,15 @@ export default {
 
     const handleSubmit = async () => {
       try {
-
+        
         let formDataToSend = {
           Username: formData.value.Username,
           Email: formData.value.Email,
           Password: formData.value.Password,
-          Avatar: formData.value.Avatar
+          Avatar: formData.value.Avatar,
+          Location: formData.value.Location,
+          Type_Question: formData.value.Type_Question,
         };
-        // const formDataToSend = new FormData();
-        // formDataToSend.append('Username', formData.value.Username);
-        // formDataToSend.append('Email', formData.value.Email);
-        // formDataToSend.append('Password', formData.value.Password);
-        // formDataToSend.append('Avatar', formData.value.Avatar);
 
         // console.log(formDataToSend, JSON.stringify(formDataToSend));
         const response = await fetch(`${process.env.VUE_APP_API_URL}/hunter/update/${formData.value['Hunter_Id']}`, {
@@ -117,7 +145,7 @@ export default {
         }
 
         const updatedData = await response.json();
-        // console.log(updatedData);
+        
         alert('Data updated successfully!');
         emit('update', updatedData);
         emit('close');
@@ -128,6 +156,8 @@ export default {
 
     return {
       formData,
+      locationSelect,
+      typesQuestionSelect,
       previewUrl,
       handleSubmit,
       handleDeleteAccount,
@@ -191,9 +221,10 @@ label {
 .submit-btn {
   background-color: #61dafb;
   border: none;
-  padding: 10px 20px;
-  color: #20232a;
   border-radius: 5px;
+  padding: 10px 20px;
+  margin: 5px 0px 5px 0px;
+  color: #20232a;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -206,9 +237,10 @@ label {
 .delete-account-btn {
   background-color: #bf2121;
   border: none;
-  padding: 10px 20px;
-  color: #20232a;
   border-radius: 5px;
+  padding: 10px 20px;
+  margin: 5px 0px 5px 0px;
+  color: #fff;
   cursor: pointer;
   transition: background-color 0.3s;
 }

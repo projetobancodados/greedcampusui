@@ -15,7 +15,7 @@
 
     </div>
 
-    <div>Welcome, {{ hunterData.Username }}</div>
+    <div><b>Welcome, {{ hunterData.Username }}</b></div>
     
     <div class="jenny-count">
       <button @click="openJennyPuzzle" class="btn btn-jenny">Jennys</button>
@@ -26,6 +26,8 @@
   <ProfileModal 
     v-if="showProfile"
     :data="hunterData"
+    :locations="locations"
+    :typesQuestion="typesQuestion"
     @close="closeProfile"
     @update="handleDataUpdate"
   />
@@ -41,7 +43,7 @@
 <script>
 import { ref, computed } from 'vue';
 import { logUserAPI } from '../../api';
-import { binaryStrToArrayBuffer } from '../../utils';
+import { binaryStrToArrayBuffer, convertBufferToImageURL } from '../../utils';
 import { useAuthStore } from '../../stores/auth';
 
 import ProfileModal from './profile/ProfileModal.vue';
@@ -58,26 +60,29 @@ export default {
       type: Object,
       required: true,
     },
+    gameElements: {
+      type: Object,
+      required: true,
+    }
   },
   setup(props) {
     
-    // console.log(props.data);
+    // console.log(props.gameElements);
     const isDropdownVisible = ref(false);
     const showProfile = ref(false);
     const showJennyPuzzle = ref(false);
 
     const hunterData = ref(props.data);
+    const locations = ref(props.gameElements['locations']);
+    const typesQuestion = ref(props.gameElements['typesQuestion']);
+
     const authStore = useAuthStore();
 
     const placeholderAvatar = computed(() => {
       // console.log(hunterData.value.Avatar);
       if (hunterData.value.Avatar) {
         const buffer = binaryStrToArrayBuffer(hunterData.value.Avatar);
-        const mimeType = 'application/octet-stream';
-        const result = new Blob([buffer], {type: mimeType});
-        // const result = new Blob([hunterData.value.Avatar], {type: 'application/octet-stream'});
-        // console.log(result);
-        return URL.createObjectURL(result);
+        return convertBufferToImageURL(buffer);
       }
       return require('@/assets/placeholder-avatar.png');
     });
@@ -128,6 +133,8 @@ export default {
       showProfile,
       showJennyPuzzle,
       hunterData,
+      locations,
+      typesQuestion,
       placeholderAvatar,
       openProfile,
       closeProfile,
@@ -152,7 +159,7 @@ export default {
   align-items: center;
   width: 100%;
   padding: 10px;
-  background-color: #ccc;
+  /* background-color: #ccc; */
 }
 
 .session-options {
@@ -167,6 +174,7 @@ export default {
   width: 60px; /* Adjust size */
   height: 60px; /* Adjust size */
   border-radius: 50%; /* Makes it circular */
+  border: 1px solid black;
 }
 
 .dropdown-menu {
