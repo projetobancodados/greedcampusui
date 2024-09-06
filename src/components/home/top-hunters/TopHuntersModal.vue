@@ -31,7 +31,6 @@
 <script>
 import { onMounted, ref } from 'vue';
 import { binaryStrToArrayBuffer, convertBufferToImageURL } from '@/utils';
-// import { binaryStrToArrayBuffer, convertBufferToImageURL } from '@/utils';
 export default {
   
   props: {
@@ -45,16 +44,7 @@ export default {
 
     const manageHunters = () => {
       allHuntersArray.value = props.allHunters;
-      if (allHuntersArray.value) {
-
-        // sort by card number, then jenny qtd
-        allHuntersArray.value.sort((a, b) => {
-          if (a.Cards_Qtd != b.Cards_Qtd) {
-            return b.Cards_Qtd - a.Cards_Qtd;
-          }
-          return b.Jenny_Qtd - a.Jenny_Qtd;
-        });
-      }
+      // if (allHuntersArray.value) {}
     }
 
     const manageAvatarImg = (avatarImg) => {
