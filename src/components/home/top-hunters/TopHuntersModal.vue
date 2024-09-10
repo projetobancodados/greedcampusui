@@ -18,11 +18,19 @@
             </div>
           
             <div class="hunter-jennys">
-              {{ hunterItem.Cards_Qtd }}
+              <button @click="checkHunterCards(hunterItem)">See Cards</button>
             </div>
 
           </div>
         </div>
+
+        <BookModalVue 
+          v-if="showBookListing"
+          :isBuyList="true"
+          :bookCards="currentHunterCards"
+          :hunterData="currentHunter"
+          @close="closeBookListing"
+        />
       </div>
     </div>
   </div>
@@ -31,8 +39,13 @@
 <script>
 import { onMounted, ref } from 'vue';
 import { binaryStrToArrayBuffer, convertBufferToImageURL } from '@/utils';
+import { getAllHunterCards } from '@/api';
+import BookModalVue from '../book/BookModal.vue';
+
 export default {
-  
+  components: {
+    BookModalVue,
+  },
   props: {
     allHunters: {
       type: Array,
@@ -41,6 +54,17 @@ export default {
   },
   setup(props) {
     const allHuntersArray = ref([]);
+    const currentHunterCards = ref(null);
+    const currentHunter = ref(null);
+
+    const showBookListing = ref(false);
+    const openBookListing = () => {
+      showBookListing.value = true;
+    };
+
+    const closeBookListing = () => {
+      showBookListing.value = false;
+    };
 
     const manageHunters = () => {
       allHuntersArray.value = props.allHunters;
@@ -55,12 +79,35 @@ export default {
       return require('@/assets/placeholder-avatar.png');
     }
 
+    const checkHunterCards = async (hunter) => {
+      try {
+        const response = await getAllHunterCards(hunter.Hunter_Id);
+        if (!response.ok) {
+          throw new Error('Failed to fetch hunter cards!');
+        }
+        let data = await response.json();
+        if (data) {
+          currentHunterCards.value = data;
+          currentHunter.value = hunter;
+          openBookListing();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     onMounted(manageHunters);
 
     return {
       allHuntersArray,
+      showBookListing,
+      currentHunterCards,
+      currentHunter,
+      openBookListing,
+      closeBookListing,
       manageHunters,
       manageAvatarImg,
+      checkHunterCards,
     }
   }
 };

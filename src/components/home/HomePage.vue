@@ -10,35 +10,43 @@
     :data="fetchedHunterData"
     :gameElements="gameElements" />
 
-    <div class="">
+    <AdminPageVue 
+      v-if="fetchedHunterData.Type_Hunter == 1"
+    />
+    
+    <div class="" v-if="fetchedHunterData.Type_Hunter == 2">
       <button class="btn btn-book" @click="openBookListing">
         <img :src="require('@/assets/book-anim.gif')" class="book-anim" />
         <span class="hover-text"><b>BOOK!</b></span>
       </button>
     </div>
 
-    <div class="footer-container">
+
+    <div class="footer-container"  v-if="fetchedHunterData.Type_Hunter == 2">
       <button @click="openCampusMap" class="btn btn-jenny" >Campus Map</button>
       <button @click="openTopHunters" class="btn btn-jenny" >Top Hunters</button>
     </div>
 
     <BookModalVue 
-      v-if="showBookListing"
+      v-if="showBookListing && fetchedHunterData.Type_Hunter == 2"
       @close="closeBookListing"
+      :hunterData="fetchedHunterData"
       :bookCards="gameElements.bookCards"
     />
 
     <CampusExplorerModalVue 
-      v-if="showCampusMap"
+      v-if="showCampusMap && fetchedHunterData.Type_Hunter == 2"
       @close="closeCampusMap"
       :locations="gameElements.locations"
+      :allHunters="gameElements.allHunters"
     />
 
     <TopHuntersModalVue 
-      v-if="showTopHunters"
-      :allHunters="gameElements.allHunters"
+      v-if="showTopHunters && fetchedHunterData.Type_Hunter == 2"
+      :allHunters="gameElements.allHunters.slice(0, 10)"
       @close="closeTopHunters"
     />
+
     
   </div>
 </template>
@@ -50,6 +58,7 @@ import HeaderVue from './Header.vue';
 import CampusExplorerModalVue from './campus/CampusExplorerModal.vue';
 import TopHuntersModalVue from './top-hunters/TopHuntersModal.vue';
 import BookModalVue from './book/BookModal.vue';
+import AdminPageVue from './admin/AdminPage.vue';
 
 export default {
   name: 'HomePage',
@@ -58,6 +67,7 @@ export default {
     CampusExplorerModalVue,
     TopHuntersModalVue,
     BookModalVue,
+    AdminPageVue,
   },
   setup() {
     const fetchedHunterData = ref(null);
@@ -163,7 +173,7 @@ export default {
 
     const fetchAllGameCards = async () => {
       try {
-        const response = await getAllGameCards();
+        const response = await getAllGameCards(fetchedHunterData.value.Hunter_Id);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }

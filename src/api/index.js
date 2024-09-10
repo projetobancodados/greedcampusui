@@ -65,13 +65,55 @@ export async function getAllTypesQuestion() {
 }
 
 // Get all cards
-export async function getAllGameCards () {
-  const response = await fetch(`${process.env.VUE_APP_API_URL}/cards`);
+export async function getAllGameCards (hunter_id) {
+  const response = await fetch(`${process.env.VUE_APP_API_URL}/cards/${hunter_id}`);
   return response;
 }
 
 // Get cards by hunter id
 export async function getAllHunterCards(hunter_id) {
   const response = await fetch(`${process.env.VUE_APP_API_URL}/cards/book/${hunter_id}`)
+  return response;
+}
+
+// Get question by type and difficulty
+export async function getQuestionByTypeAndDifficulty(type_question_id, difficulty_code) {
+  const response = await fetch(`
+    ${process.env.VUE_APP_API_URL}/question/${type_question_id}/${difficulty_code}`
+  );
+  return response;
+}
+
+// Add answer
+export async function addAnswer(answerData, hunter_id, card_id, question_id, card_value) {
+  const response = await fetch(`${process.env.VUE_APP_API_URL}/answer/add`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      content: answerData.Answer,
+      hunter_id: hunter_id,
+      card_id: card_id,
+      question_id: question_id,
+      jenny_value: card_value
+    }),
+  });
+  return response;
+}
+
+// Buy from another hunter
+export async function buyfromHunter(hunter_id_from, hunter_id_to, card_id) {
+  const response = await fetch(`${process.env.VUE_APP_API_URL}/cards/trade`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      hunter_id_from: hunter_id_from,
+      hunter_id_to: hunter_id_to,
+      card_id: card_id
+    }),
+  });
   return response;
 }
