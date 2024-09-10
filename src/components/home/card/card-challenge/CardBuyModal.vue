@@ -60,7 +60,9 @@ export default {
           throw new Error('Failed to execute procedure!');
         }
         let data = await response.json();
-        console.log(data);
+        if (data.msg) {
+          alert(data.msg);
+        } 
       } catch (error) {
         console.error('Error: ', error);
       }

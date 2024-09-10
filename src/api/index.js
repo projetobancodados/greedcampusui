@@ -117,3 +117,42 @@ export async function buyfromHunter(hunter_id_from, hunter_id_to, card_id) {
   });
   return response;
 }
+
+// Get all hunter answers
+export async function getAllAnswersFromHunters() {
+  const response = await fetch(`${process.env.VUE_APP_API_URL}/answers`);
+  return response;
+}
+
+// Grant card to hunter
+export async function grantCardToHunter(answer) {
+  const response = await fetch(`${process.env.VUE_APP_API_URL}/cards/book/add`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      Card_Id: answer.Card_Id,
+      Book_Id: answer.Book_Id,
+      Hunter_Id: answer.Hunter_Id,
+      Answer_Id: answer.Answer_Id,
+      Card_Challenge_Id: answer.Card_Challenge_Id
+    }),
+  });
+  return response;
+}
+
+// Remove wrong answer
+export async function removeAnswer(answer) {
+  const response = await fetch(`${process.env.VUE_APP_API_URL}/answer/remove`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      Answer_Id: answer.Answer_Id,
+      Card_Challenge_Id: answer.Card_Challenge_Id
+    }),
+  });
+  return response;
+}
