@@ -3,39 +3,49 @@
     <div class="modal-content">
       <span class="close" @click="this.$emit('close')">&times;</span>
 
-      <button @click="showMyBookCards" class="btn btn-jenny">
-        <b v-if="myBookCardsVisible">Hide</b>
-        <b v-if="!myBookCardsVisible">My Cards</b>
-      </button>
+      <div v-if="!isBuyList">
+        <button @click="showMyBookCards" class="btn btn-jenny">
+          <b v-if="myBookCardsVisible">Hide</b>
+          <b v-if="!myBookCardsVisible">My Cards</b>
+        </button>
 
-      <button @click="showWorldBookCards" class="btn btn-jenny">
-        <b v-if="worldBookCardsVisible">Hide</b>
-        <b v-if="!worldBookCardsVisible">World Cards</b>
-      </button>
-      <div>
+        <button @click="showWorldBookCards" class="btn btn-jenny">
+          <b v-if="worldBookCardsVisible">Hide</b>
+          <b v-if="!worldBookCardsVisible">World Cards</b>
+        </button>
 
-        <BookCardsListVue
-          v-if="myBookCardsVisible"
+        <div>
+          <BookCardsListVue
+            v-if="myBookCardsVisible"
+            :bookCards="bookCards.hunter_cards"
+          />
+        </div>
+
+        <div>
+          <BookCardsListVue v-if="worldBookCardsVisible"
+            :hunterData="hunterGameData"
+            :bookCards="bookCards.game_cards"
+          />
+        </div>
+      </div>
+
+      <div v-if="isBuyList">
+        <BookCardsListVue 
           :bookCards="bookCards.hunter_cards"
+          :hunterData="hunterData"
+          :isBuyList="isBuyList"
         />
       </div>
 
-      <div>
-        <BookCardsListVue v-if="worldBookCardsVisible"
-          :bookCards="bookCards.game_cards"
-        />
-      </div>
-
-      <!-- <div v-if="bookCards.msg">
-        <h2>{{bookCards.msg}}</h2>
-      </div> -->
     </div>
   </div>
 </template>
 
 <script>
 import BookCardsListVue from './BookCardsList.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { getUserByIdAPI } from '@/api';
+
 export default {
   components: {
     BookCardsListVue,
@@ -44,13 +54,21 @@ export default {
     bookCards: {
       type: Object,
       required: true,
-    }
+    },
+    hunterData: {
+      type: Object,
+      required: true,
+    },
+    isBuyList: {
+      type: Boolean,
+      required: false,
+    },
   },
-  setup() {
-    // console.log(props.bookCards);
+  setup(props) {
 
     const myBookCardsVisible = ref(false);
     const worldBookCardsVisible = ref(false);
+    const hunterGameData = ref(null);
 
     const showMyBookCards = () => {
       if (worldBookCardsVisible.value) {
@@ -66,7 +84,25 @@ export default {
       worldBookCardsVisible.value = !worldBookCardsVisible.value;
     };
 
+    const fetchHunterData = async () => {
+      const hunter_id = props.hunterData.Hunter_Id;
+      if (hunter_id) {
+        try {
+          const response = await getUserByIdAPI(hunter_id);
+          const data = await response.json()
+          if (data) {
+            hunterGameData.value = data;
+          }
+        }catch(error) {
+          console.log('Error fetching hunter by id ' + error);
+        }
+      }
+    };
+
+    onMounted(fetchHunterData);
+
     return {
+      hunterGameData,
       myBookCardsVisible, showMyBookCards,
       worldBookCardsVisible, showWorldBookCards
     }

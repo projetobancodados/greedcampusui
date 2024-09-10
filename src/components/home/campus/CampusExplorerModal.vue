@@ -4,6 +4,7 @@
       <span class="close" @click="close">&times;</span>
       <CampusExplorerVue
         :locations="locations"
+        :allHunters="allHunters"
       />
     </div>
   </div>
@@ -14,6 +15,10 @@ import CampusExplorerVue from './CampusExplorer.vue';
 export default {
   props: {
     locations: {
+      type: Array,
+      required: true,
+    },
+    allHunters: {
       type: Array,
       required: true,
     }

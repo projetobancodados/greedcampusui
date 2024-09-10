@@ -16,41 +16,77 @@
         ●
       </div>
     </div>
+
+    <TopHuntersModalVue
+      v-if="showHuntersOnLocation"
+      @close="closeHuntersOnLocation"
+      :allHunters="filteredHunters"
+    />
     
   </div>
 </template>
 
 <script>
 import Panzoom from '@panzoom/panzoom';
+import { onMounted, ref } from 'vue';
+import TopHuntersModalVue from '../top-hunters/TopHuntersModal.vue';
 
 export default {
+  components: {
+    TopHuntersModalVue,
+  },
   props: {
     locations: {
       type: Array,
       required: true,
-    }
-  },
-  // data() {
-  //   return {
-  //     points: [
-  //       { x: 71, y: 37, id: 1 },
-  //     ],
-  //   };
-  // },
-  methods: {
-    handlePointClick(point) {
-      alert(`Clicked on point ${point.Description}`);
-      // Implement your interaction logic here
+    },
+    allHunters: {
+      type: Array,
+      required: true,
     },
   },
-  mounted() {
-    const panzoomInstance = Panzoom(this.$refs.campusExplorerContainer, {
-      maxScale: 5,
-      contain: 'outside', // Ensures the image is contained within the container
-      startX: 0,
-      startY: 0,
+  setup(props) {
+
+    const campusExplorerContainer = ref(null);
+    const showHuntersOnLocation = ref(false);
+    const filteredHunters = ref([]);
+
+    const openHuntersOnLocation = () => {
+      showHuntersOnLocation.value = true;
+    };
+
+    const closeHuntersOnLocation = () => {
+      showHuntersOnLocation.value = false;
+    };
+
+    const handlePointClick = (point) => {
+      // alert(`Clicked on point ${point.Description}`);
+      filteredHunters.value = filterHuntersByLocation(point);
+      openHuntersOnLocation();
+    };
+
+    const filterHuntersByLocation = (location) => {
+      return props.allHunters.filter((hunter) => hunter.Location_Id === location.Location_Id);
+    };
+
+    onMounted(() => {
+      const panzoomInstance = Panzoom(campusExplorerContainer.value, {
+        maxScale: 5,
+        contain: 'outside', // Ensures the image is contained within the container
+        startX: 0,
+        startY: 0,
+      });
+      campusExplorerContainer.value.addEventListener('wheel', panzoomInstance.zoomWithWheel);
     });
-    this.$refs.campusExplorerContainer.addEventListener('wheel', panzoomInstance.zoomWithWheel);
+
+    return {
+      campusExplorerContainer,
+      showHuntersOnLocation,
+      openHuntersOnLocation,
+      closeHuntersOnLocation,
+      filteredHunters,
+      handlePointClick,
+    };
   },
 };
 </script>
