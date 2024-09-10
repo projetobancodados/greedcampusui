@@ -4,7 +4,15 @@
 ```
 npm install
 ```
-
+### Set up enviroment variables:
+Copy .env.example to .env:
+```
+cp .env.example .env
+```
+Change the variable value:
+```
+VUE_APP_API_URL=http://localhost:5000
+```
 ### Compiles and hot-reloads for development
 ```
 npm run serve
